@@ -2,7 +2,7 @@ const fetch = require('node-fetch');
 const globalMercator = require('global-mercator')
 const transformCoords = require('./util/transformCoords');
 const config = require('./config');
-const url = 'http://sigpac.mapama.gob.es';
+const url = 'https://sigpac.mapama.gob.es';
 
 /**
  * Devuelve un geojson con las datos de la localización
