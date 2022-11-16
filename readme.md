@@ -277,7 +277,7 @@ Por favor, pongase en contacto conmigo para cualquier problema, duda o sugerenci
 
 Daniel Cebrián - d.cebrian9@gmail.com
 
-[Nodejs]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=nodedotjs&logoColor=green
+[Nodejs]: https://img.shields.io/badge/Nodejs-20232A?style=for-the-badge&logo=nodedotjs&logoColor=green
 [Nodejs-url]: https://nodejs.org/es/
 [React.js]: https://img.shields.io/badge/React-20232A?style=for-the-badge&logo=react&logoColor=61DAFB
 [React-url]: https://reactjs.org/
