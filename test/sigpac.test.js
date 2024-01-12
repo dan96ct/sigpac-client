@@ -1,6 +1,6 @@
 const chai = require('chai');
 
-const Sigpac = require('../index');
+const Sigpac = require('../dist/index');
 
 describe('Suite de pruebas Sigpac', () => {
      it('Deberia devolver un objeto con los resultados del filtro', (done) => {
