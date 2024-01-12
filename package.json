@@ -1,6 +1,6 @@
 {
   "name": "sigpac-client",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "Cliente para la API de SIGPAC",
   "main": "dist/index.js",
   "scripts": {
