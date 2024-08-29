@@ -56,12 +56,9 @@ Basicamente se ha tratado de extrapolar el funcionamiento de la <a href="https:/
 Probada en:
 
 [![Nodejs]][Nodejs-url]
-[![React.js]][React-url]
 
 
-
-
-
+> **⚠️ IMPORTANTE:** Se recomienda usar esta libreria en NodeJS, aunque se puede instalar en react o angular es posible que fallen las corns o de problemas con la libreria  proj4.
 
 ## Instalación
 
