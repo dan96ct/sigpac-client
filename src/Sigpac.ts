@@ -150,7 +150,7 @@ const consulta = async (
     };
     let response = await fetch(
       (configOverride.proxy ? "" : url) +
-        `/fega/ServiciosVisorSigpac/LayerInfo?layer=${capa}&id=${provincia},${municipio},${agregado},${zona},${poligono},${parcela}`,
+        `/fega/ServiciosVisorSigpac/LayerInfo/${capa}/${provincia},${municipio},${agregado},${zona},${poligono},${parcela}`,
       options
     );
     let info = (await response.json()) as Consulta;
@@ -179,7 +179,7 @@ const consulta = async (
     };
     let response = await fetch(
       (configOverride.proxy ? "" : url) +
-        `/fega/ServiciosVisorSigpac/LayerInfo?layer=${capa}&id=${provincia},${municipio},${agregado},${zona},${poligono},${parcela},${recinto}`,
+        `/fega/ServiciosVisorSigpac/LayerInfo/${capa}/${provincia},${municipio},${agregado},${zona},${poligono},${parcela},${recinto}`,
       options
     );
     let info = (await response.json()) as Consulta;
