@@ -66,7 +66,7 @@ const buscar = async (
           if (parcela) {
             let response = await fetch(
               (configOverride.proxy ? "" : url) +
-                `/fega/ServiciosVisorSigpac/query/recintos/${provincia}/${municipio}/0/0/${poligono}/${parcela}.geojson`,
+                `/fega/ServiciosVisorSigpac/query/recintos/${provincia}/${municipio}/0/0/${poligono}/${parcela}`,
               options
             );
             let geojson = await response.json();
@@ -74,7 +74,7 @@ const buscar = async (
           } else {
             let response = await fetch(
               (configOverride.proxy ? "" : url) +
-                `/fega/ServiciosVisorSigpac/query/parcelas/${provincia}/${municipio}/0/0/${poligono}.geojson`,
+                `/fega/ServiciosVisorSigpac/query/parcelas/${provincia}/${municipio}/0/0/${poligono}`,
               options
             );
             let geojson = await response.json();
@@ -83,7 +83,7 @@ const buscar = async (
         } else {
           let response = await fetch(
             (configOverride.proxy ? "" : url) +
-              `/fega/ServiciosVisorSigpac/query/poligonos/${provincia}/${municipio}/0/0.geojson`,
+              `/fega/ServiciosVisorSigpac/query/poligonos/${provincia}/${municipio}/0/0`,
             options
           );
           let geojson = await response.json();
@@ -92,7 +92,7 @@ const buscar = async (
       } else {
         let response = await fetch(
           (configOverride.proxy ? "" : url) +
-            `/fega/ServiciosVisorSigpac/query/municipios/${provincia}.geojson`,
+            `/fega/ServiciosVisorSigpac/query/municipios/${provincia}`,
           options
         );
         let geojson = await response.json();
@@ -101,7 +101,7 @@ const buscar = async (
     } else {
       let response = await fetch(
         (configOverride.proxy ? "" : url) +
-          `/fega/ServiciosVisorSigpac/query/provincias/${comunidad}.geojson`,
+          `/fega/ServiciosVisorSigpac/query/provincias/${comunidad}`,
         options
       );
       let geojson = await response.json();
