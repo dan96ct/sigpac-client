@@ -58,7 +58,7 @@ Probada en:
 [![Nodejs]][Nodejs-url]
 
 
-> **⚠️ IMPORTANTE:** Se recomienda usar esta libreria en NodeJS, aunque se puede instalar en react o angular es posible que fallen las corns o de problemas con la libreria  proj4.
+> **⚠️ IMPORTANTE:** Se recomienda usar esta libreria en NodeJS, aunque se puede instalar en react o angular es posible que fallen las cors o de problemas con la libreria  proj4.
 
 ## Instalación
 
