@@ -1,8 +1,52 @@
+export type CapaLocalizacion = 
+   | "parcela" 
+   | "recinto" 
+   | "declaracion" 
+   | "red_natura" 
+   | "montanera" 
+   | "nitratos" 
+   | "fitosanitarios" 
+   | "pastos_permanentes" 
+   | "e_paisaje_linea" 
+   | "sie" 
+   | "mfe" 
+   | "cp_no_integradas";
+
+export type CapaConsulta = "parcela" | "recinto" | "infodeclaracion";
+
 export type ConfigUser = {
-   transformCoords: boolean,
-   projection: string,
-   proxy: boolean
+   transformCoords?: boolean;
+   projection?: string;
+   proxy?: boolean;
 }
+
+export type Coordenadas = {
+   lng: number;
+   lat: number;
+}
+
+export type DatosBusqueda = {
+   comunidad: number;
+   provincia?: number;
+   municipio?: number;
+   poligono?: number;
+   parcela?: number;
+}
+
+export type DatosConsultaParcela = {
+   provincia: number;
+   municipio: number;
+   agregado: number;
+   zona: number;
+   poligono: number;
+   parcela: number;
+}
+
+export type DatosConsultaRecinto = DatosConsultaParcela & {
+   recinto: number;
+}
+
+export type DatosConsultaDeclaracion = Coordenadas;
 
 export type Geojson = {
    type:     string;

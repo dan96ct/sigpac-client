@@ -2,21 +2,32 @@ import fetch from "node-fetch";
 import * as globalMercator from "global-mercator";
 import { transformCoords } from "./util/transformCoords.js";
 import { config } from "./config.js";
-import { ConfigUser, Consulta, Geojson } from "./types.js";
+import {
+  ConfigUser,
+  Consulta,
+  Geojson,
+  CapaLocalizacion,
+  CapaConsulta,
+  Coordenadas,
+  DatosBusqueda,
+  DatosConsultaParcela,
+  DatosConsultaRecinto,
+  DatosConsultaDeclaracion,
+} from "./types.js";
 
 const url = "https://sigpac.mapa.es";
 
 /**
  * Devuelve un geojson con las datos de la localización
- * @param {String} capa Capa de los datos [  parcela, recinto, declaracion, red_natura, montanera, nitratos, fitosanitarios, pastos_permanentes, e_paisaje_linea, sie, mfe, cp_no_integradas ]
- * @param {Object} coords Objeto con la longitud y latitud [ lng, lat ]
+ * @param {CapaLocalizacion} capa Capa de los datos [  parcela, recinto, declaracion, red_natura, montanera, nitratos, fitosanitarios, pastos_permanentes, e_paisaje_linea, sie, mfe, cp_no_integradas ]
+ * @param {Coordenadas} coords Objeto con la longitud y latitud [ lng, lat ]
  * @param {ConfigUser} configUser Objeto con la configuración del usuario para sobreescribir la original [ transformCoords, projection, proxy ]
  * @returns {Geojson} Objeto con el geojson de las parcelas
  */
 const localizacion = async (
-  capa: string,
-  coords: { lng: number; lat: number },
-  configUser: ConfigUser
+  capa: CapaLocalizacion,
+  coords: Coordenadas,
+  configUser?: ConfigUser
 ): Promise<Geojson> => {
   const { lng, lat } = coords;
   const configOverride = { ...config, ...configUser };
@@ -37,20 +48,20 @@ const localizacion = async (
   );
   let geojson = (await response.json()) as Geojson;
 
-  return configOverride.transformCoords
+  return configOverride.transformCoords && configOverride.projection
     ? transformCoords(geojson, configOverride.projection)
     : geojson;
 };
 
 /**
  * Devuelve un geojson con los datos
- * @param {Object} data Objeto con los datos para el filtro [ comunidad, provincia, municipio, poligono, parcela ]
+ * @param {DatosBusqueda} data Objeto con los datos para el filtro [ comunidad, provincia, municipio, poligono, parcela ]
  * @param {ConfigUser} configUser Objeto con la configuración del usuario para sobreescribir la original [ proxy ]
  * @returns {Geojson} Objeto con los datos de la busqueda
  */
 const buscar = async (
-  data: { [key: string]: number },
-  configUser: ConfigUser
+  data: DatosBusqueda,
+  configUser?: ConfigUser
 ): Promise<Geojson> => {
   const { comunidad, provincia, municipio, poligono, parcela } = data;
   const configOverride = { ...config, ...configUser };
@@ -114,32 +125,53 @@ const buscar = async (
 
 /**
  * Devuelve un json con los datos de la capa
- * @param {String} capa Capa de los datos [  parcela, recinto, declaracion ]
- * @param {Object} data Objeto con los datos requeridos segun la capa
+ * @param {CapaConsulta} capa Capa de los datos [  parcela, recinto, infodeclaracion ]
+ * @param {DatosConsultaParcela | DatosConsultaRecinto | DatosConsultaDeclaracion} data Objeto con los datos requeridos segun la capa
  * @param {ConfigUser} configUser Objeto con la configuración del usuario para sobreescribir la original [ proxy ]
  * @returns {Consulta} Objeto con la información de la parcela, recinto o declaracion
  */
-const consulta = async (
-  capa: string,
-  data: { [key: string]: any },
-  configUser: ConfigUser
-): Promise<Consulta> => {
+async function consulta(
+  capa: "parcela",
+  data: DatosConsultaParcela,
+  configUser?: ConfigUser
+): Promise<Consulta>;
+
+async function consulta(
+  capa: "recinto",
+  data: DatosConsultaRecinto,
+  configUser?: ConfigUser
+): Promise<Consulta>;
+
+async function consulta(
+  capa: "infodeclaracion",
+  data: DatosConsultaDeclaracion,
+  configUser?: ConfigUser
+): Promise<Consulta>;
+
+async function consulta(
+  capa: CapaConsulta,
+  data: DatosConsultaParcela | DatosConsultaRecinto | DatosConsultaDeclaracion,
+  configUser?: ConfigUser
+): Promise<Consulta> {
   const configOverride = { ...config, ...configUser };
-  enum capas {
-    parcela = "parcela",
-    recinto = "recinto",
-    declaracion = "infodeclaracion",
-  }
 
-  if (capa == capas.parcela) {
-    const { provincia, agregado, zona, municipio, poligono, parcela } = data;
+  if (capa == "parcela") {
+    const parcela = data as DatosConsultaParcela;
+    const {
+      provincia,
+      agregado,
+      zona,
+      municipio,
+      poligono,
+      parcela: parcelaId,
+    } = parcela;
     if (
       provincia == undefined ||
       agregado == undefined ||
       zona == undefined ||
       municipio == undefined ||
       poligono == undefined ||
-      parcela == undefined ||
+      parcelaId == undefined ||
       capa == undefined
     ) {
       throw new Error("Datos incorrectos");
@@ -150,7 +182,7 @@ const consulta = async (
     };
     let response = await fetch(
       (configOverride.proxy ? "" : url) +
-        `/fega/ServiciosVisorSigpac/LayerInfo/${capa}/${provincia},${municipio},${agregado},${zona},${poligono},${parcela}`,
+        `/fega/ServiciosVisorSigpac/LayerInfo/${capa}/${provincia},${municipio},${agregado},${zona},${poligono},${parcelaId}`,
       options
     );
     let info = (await response.json()) as Consulta;
@@ -158,9 +190,17 @@ const consulta = async (
     return info;
   }
 
-  if (capa == capas.recinto) {
-    const { provincia, agregado, zona, municipio, poligono, parcela, recinto } =
-      data;
+  if (capa == "recinto") {
+    const recinto = data as DatosConsultaRecinto;
+    const {
+      provincia,
+      agregado,
+      zona,
+      municipio,
+      poligono,
+      parcela,
+      recinto: recintoId,
+    } = recinto;
     if (
       provincia == undefined ||
       agregado == undefined ||
@@ -168,7 +208,7 @@ const consulta = async (
       municipio == undefined ||
       poligono == undefined ||
       parcela == undefined ||
-      recinto == undefined ||
+      recintoId == undefined ||
       capa == undefined
     ) {
       throw new Error("Datos incorrectos");
@@ -179,7 +219,7 @@ const consulta = async (
     };
     let response = await fetch(
       (configOverride.proxy ? "" : url) +
-        `/fega/ServiciosVisorSigpac/LayerInfo/${capa}/${provincia},${municipio},${agregado},${zona},${poligono},${parcela},${recinto}`,
+        `/fega/ServiciosVisorSigpac/LayerInfo/${capa}/${provincia},${municipio},${agregado},${zona},${poligono},${parcela},${recintoId}`,
       options
     );
     let info = (await response.json()) as Consulta;
@@ -187,8 +227,9 @@ const consulta = async (
     return info;
   }
 
-  if (capa == capas.declaracion) {
-    const { lng, lat } = data;
+  if (capa == "infodeclaracion") {
+    const declaracion = data as DatosConsultaDeclaracion;
+    const { lng, lat } = declaracion;
     if (lng == undefined || lat == undefined) {
       throw new Error("Datos incorrectos");
     }
@@ -206,7 +247,7 @@ const consulta = async (
   }
 
   throw new Error("Nombre de la capa incorrecta");
-};
+}
 
 export default {
   localizacion,
