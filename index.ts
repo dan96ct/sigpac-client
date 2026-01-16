@@ -1,3 +1,1 @@
-'use strict';
-
-module.exports = require('./src/Sigpac').default;
+export { default, localizacion, buscar, consulta } from "./src/Sigpac.js";

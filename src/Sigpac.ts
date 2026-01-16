@@ -1,10 +1,10 @@
 import fetch from "node-fetch";
 import * as globalMercator from "global-mercator";
-import { transformCoords } from "./util/transformCoords";
-import { config } from "./config";
-import { ConfigUser, Consulta, Geojson } from "./types";
+import { transformCoords } from "./util/transformCoords.js";
+import { config } from "./config.js";
+import { ConfigUser, Consulta, Geojson } from "./types.js";
 
-const url = "https://sigpac.mapama.gob.es";
+const url = "https://sigpac.mapa.es";
 
 /**
  * Devuelve un geojson con las datos de la localización
@@ -128,7 +128,7 @@ const consulta = async (
   enum capas {
     parcela = "parcela",
     recinto = "recinto",
-    declaracion = "declaracion",
+    declaracion = "infodeclaracion",
   }
 
   if (capa == capas.parcela) {
@@ -198,7 +198,7 @@ const consulta = async (
     };
     let response = await fetch(
       (configOverride.proxy ? "" : url) +
-        `/fega/ServiciosVisorSigpac/query/infodeclaracion/${lng}/${lat}.geojson`,
+        `/fega/ServiciosVisorSigpac/query/infodeclaracion/${lng}/${lat}`,
       options
     );
     let info = (await response.json()) as Consulta;
@@ -208,8 +208,10 @@ const consulta = async (
   throw new Error("Nombre de la capa incorrecta");
 };
 
-exports.default = {
+export default {
   localizacion,
   buscar,
   consulta,
 };
+
+export { localizacion, buscar, consulta };

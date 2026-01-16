@@ -1,6 +1,5 @@
-const chai = require("chai");
-
-const Sigpac = require("../dist/index");
+import chai from "chai";
+import Sigpac from "../dist/index.js";
 
 describe("Suite de pruebas Sigpac", () => {
   it("Deberia devolver un objeto con los resultados del filtro", (done) => {
@@ -93,7 +92,7 @@ describe("Suite de pruebas Sigpac", () => {
       lng: -1.8054282,
       lat: 38.9598049,
     };
-    Sigpac.consulta("declaracion", data)
+    Sigpac.consulta("infodeclaracion", data)
       .then((json) => {
         if (typeof json == "object") {
           done();

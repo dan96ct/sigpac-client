@@ -2,7 +2,9 @@
   "name": "sigpac-client",
   "version": "1.0.9",
   "description": "Cliente para la API de SIGPAC",
+  "type": "module",
   "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "test": "mocha ./test/*.test.js",
     "dev": "tsc -w",
@@ -31,6 +33,7 @@
   "devDependencies": {
     "@types/node": "^20.11.0",
     "@types/node-fetch": "^2.6.10",
+    "@types/proj4": "^2.5.6",
     "ts-node": "^10.9.2",
     "typescript": "^5.3.3"
   }
